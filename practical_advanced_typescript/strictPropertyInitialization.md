@@ -1,0 +1,1 @@
+*strictPropertyInitialization* makes sure that all properties of a class are given a non undefined value at init. This can avoid all kinds of confusing run time errors where the developer forgets that the value might be undefined. Work with confidence that the property you are working with is always a given type!

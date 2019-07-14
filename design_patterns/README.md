@@ -1,0 +1,3 @@
+# Notes on Design Patterns
+
+This repo represents my learning on design patterns using Ruby. The tough thing about studying design patterns is that reading about design patterns feels too abstract to mean a whole lot. Wanting to cement my learning, I challenged myself to make a small trivial example modeling each pattern, and then (just as important) writing a little something about them. Yes, there are plenty of other examples out there, but these examples were thought up by me, and, as a result I now understand the patterns and when I might want to use them, better than if I had simply read about them.
