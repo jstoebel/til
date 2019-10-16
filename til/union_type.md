@@ -1,8 +1,8 @@
-Typescript, while useful tool, can also present its own frustrations. One such example happened to me recently, when I was trying to write a function that has to be able to accept more than one type as a parameter:
+Typescript, while a useful tool, can also present its own frustrations. One such example happened to me recently, when I was trying to write a function that has to be able to accept more than one type as a parameter:
 
-Specifically, I was writing a reducer for notifications in my app. One action `ADD_NOTIFICATION` accepts an object as its payload and appends it to an array. The other, `REMOVE_NOTIFICATION` accepts a number and removes the coorsponding object by index. Here was my first attempt:
+Specifically, I was writing a reducer for notifications in my app. One action `ADD_NOTIFICATION` accepts an object as its payload and appends it to an array. The other, `REMOVE_NOTIFICATION` accepts a number and removes the matching object by index. Here was my first attempt:
 
-```
+```typescript
 import { Reducer, Action } from 'redux';
 import { NotificationI } from '../interfaces/notification'
 import C from '../constants';
@@ -32,7 +32,7 @@ const reducer: Reducer<NotificationI[]> = (state = initialState, action: actionI
 export default reducer
 ```
 
-Makes sense right? In the first case of the switch statement, treat `payload` like an object, In the second, treat it like a number. The idea comes as second nature to me coming from dynamicly typed programing. The philosophy there is _we never know what type something is. Just proceed forward and let me know at runtime if we tried to do something with an object that it can't do._ So for example, if we tried to pass an object as payload to `REMOVE_NOTIFICATION` we would get an error when trying to pass it into `.splice` since `.splice` expects a number. Typically in dynamic languages we protect ourselves from this danger by covering our code with tests. This is a perfectly acceptable approach, but Typescript is more picky than that.
+Makes sense right? In the first case of the switch statement, treat `payload` like an object, In the second, treat it like a number. The idea comes as second nature to me coming from a dynamically typed programing. The philosophy there is _we never know what type something is. Just proceed forward and let me know at runtime if we tried to do something with an object that it can't do._ So for example, if we tried to pass an object as payload to `REMOVE_NOTIFICATION` we would get an error when trying to pass it into `.splice` since `.splice` expects a number. Typically in dynamic languages we protect ourselves from this danger by covering our code with tests. This is a perfectly acceptable approach, but Typescript is more picky than that.
 
 Lets go back to where we defined the interface for `action`:
 
@@ -43,7 +43,7 @@ interface actionI {
 }
 ```
 
-That pipe operator is telling the compiler "payload will be either a notification object or a number. The compiler is ok with not being sure what type an argument will be. What it is not ok with is the possability the we might end up trying to do something with the argument that makes no sense (such as pass an object to `splice`). The compiler complains:
+That pipe operator is telling the compiler "payload will be either a notification object or a number. The compiler is ok with not being sure what type an argument will be. What it is not ok with is the possibility the we might end up trying to do something with the argument that makes no sense (such as pass an object to `splice`). The compiler complains:
 ```
 Argument of type 'number | NotificationI' is not assignable to parameter of type 'number'.
   Type 'NotificationI' is not assignable to type 'number'.
@@ -51,7 +51,7 @@ Argument of type 'number | NotificationI' is not assignable to parameter of type
 
 Basically its saying "I know you _said_ payload could be a `number` but you also said it might be a notification. And if it is, we'll crash when trying to pass it into `splice`.
 
-Fortunatly, there's a way to keep the compiler happy: type guards. Here's an example:
+Fortunately, there's a way to keep the compiler happy: type guards. Here's an example:
 
 ```
 function isNotification(payload: NotificationI | Number): payload is NotificationI {
